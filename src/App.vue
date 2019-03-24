@@ -1,26 +1,43 @@
 <template>
   <div id="app">
-    <div id="mapbox"></div>
+    <div
+      id="block-overlay"
+      v-show="!isInitialized || isLoading"
+    ><span>{{overlayText}}</span></div>
+    <mapbox
+      :features="featureCollection"
+      v-on:initialized="onInitialized"></mapbox>
   </div>
 </template>
 
 <script>
-import mapboxgl from 'mapbox-gl';
+import Mapbox from "@/components/MapBox.vue";
+import { mapState } from  "vuex";
 
 export default {
-  name: 'app',
-  mounted() {
-    mapboxgl.accessToken =
-      'pk.eyJ1Ijoic2FtbXVnZyIsImEiOiJjanRpOWNlZXQwbTRyNGFsZjA2bDAyOXByIn0.SFT7EK3TupAtjvsb2XjBEA';
-    const map = new mapboxgl.Map({
-      container: 'mapbox',
-      style: 'mapbox://styles/mapbox/dark-v9',
-      center: [-98, 40],
-      zoom: 4
-    });
+  name: "app",
+  components: {
+    Mapbox
   },
   data() {
-    return {};
+    return {
+      isInitialized: false,
+      isLoading: true
+    };
+  },
+  methods: {
+    onInitialized() {
+      this.isInitialized = true;
+      // this.$store.dispatch('FETCH_STARTING_RALEIGH_IPS');
+    }
+  },
+  computed: {
+    ...mapState([
+      'featureCollection'
+    ]),
+    overlayText() {
+      return !this.isInitialized ? 'Initializing...' : 'Loading Data...';
+    }
   }
 };
 </script>
@@ -28,8 +45,7 @@ export default {
 <style lang="scss">
 html,
 body,
-#app,
-#mapbox {
+#app {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -37,21 +53,23 @@ body,
 }
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-}
+  color: #fff;
+  position: relative;
 
-#mapbox {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-
-  .mapboxgl-canvas {
-    position: relative !important;
+  #block-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
   }
 }
 </style>
