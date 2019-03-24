@@ -6,7 +6,7 @@
  * @param {*} payload - the data with which the state should be updated. All updates must be in one payload
  */
 
- const RECEIVED_NEW_FEATURE_COLLECTION = (state, payload) => {
+const RECEIVED_NEW_FEATURE_COLLECTION = (state, payload) => {
   state.featureCollection = payload;
 };
 

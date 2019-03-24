@@ -1,21 +1,18 @@
 <template>
   <div id="app">
-    <div
-      id="block-overlay"
-      v-show="!isInitialized || isLoading"
-    ><span>{{overlayText}}</span></div>
-    <mapbox
-      :features="featureCollection"
-      v-on:initialized="onInitialized"></mapbox>
+    <div id="block-overlay" v-show="!isInitialized || isLoading">
+      <span>{{ overlayText }}</span>
+    </div>
+    <mapbox :features="featureCollection" v-on:initialized="onInitialized"></mapbox>
   </div>
 </template>
 
 <script>
-import Mapbox from "@/components/MapBox.vue";
-import { mapState } from  "vuex";
+import Mapbox from '@/components/MapBox.vue';
+import { mapState } from 'vuex';
 
 export default {
-  name: "app",
+  name: 'app',
   components: {
     Mapbox
   },
@@ -29,16 +26,13 @@ export default {
     onInitialized() {
       let self = this;
       self.isInitialized = true;
-      self.$store.dispatch('FETCH_STARTING_RALEIGH_IPS')
-        .finally(function () {
-          self.isLoading = false;
-        });
+      self.$store.dispatch('FETCH_STARTING_RALEIGH_IPS').finally(function() {
+        self.isLoading = false;
+      });
     }
   },
   computed: {
-    ...mapState([
-      'featureCollection'
-    ]),
+    ...mapState(['featureCollection']),
     overlayText() {
       return !this.isInitialized ? 'Initializing...' : 'Loading Data...';
     }
@@ -57,7 +51,7 @@ body,
 }
 
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

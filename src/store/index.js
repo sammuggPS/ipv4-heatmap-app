@@ -1,4 +1,3 @@
-
 import Vue from 'vue';
 import Vuex from 'vuex';
 import actions from './actions';
@@ -12,7 +11,7 @@ const store = new Vuex.Store({
   strict: process.env.NODE_ENV === 'development',
   state: { ...initialState },
   actions,
-  mutations,
+  mutations
   // getters
 });
 
