@@ -27,8 +27,12 @@ export default {
   },
   methods: {
     onInitialized() {
-      this.isInitialized = true;
-      // this.$store.dispatch('FETCH_STARTING_RALEIGH_IPS');
+      let self = this;
+      self.isInitialized = true;
+      self.$store.dispatch('FETCH_STARTING_RALEIGH_IPS')
+        .finally(function () {
+          self.isLoading = false;
+        });
     }
   },
   computed: {

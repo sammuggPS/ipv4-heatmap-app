@@ -8,6 +8,11 @@ import mapboxgl from "mapbox-gl";
 export default {
   name: 'mapbox',
   props: ['features'],
+  data() {
+    return {
+      sourceName: 'ip-coordinates'
+    };
+  },
   mounted() {
     let self = this;
     mapboxgl.accessToken =
@@ -22,7 +27,7 @@ export default {
     });
 
     self.map.on("load", function() {
-      self.map.addSource("ip-coordinates", {
+      self.map.addSource(self.sourceName, {
         type: "geojson",
         data: self.features
       });
@@ -31,8 +36,8 @@ export default {
         {
           id: "ip-coordinates-heat",
           type: "heatmap",
-          source: "ip-coordinates",
-          maxzoom: 9,
+          source: self.sourceName,
+          maxzoom: 12,
           paint: {
             // Increase the heatmap weight based on frequency
             "heatmap-weight": 1,
@@ -78,7 +83,7 @@ export default {
               20
             ],
             // Transition from heatmap to circle layer by zoom level
-            "heatmap-opacity": ["interpolate", ["linear"], ["zoom"], 7, 1, 9, 0]
+            "heatmap-opacity": ["interpolate", ["linear"], ["zoom"], 8, 1, 12, 0]
           }
         },
         "waterway-label"
@@ -87,7 +92,7 @@ export default {
       self.map.addLayer({
         id: "ip-coordinates-point",
         type: "circle",
-        source: "ip-coordinates",
+        source: self.sourceName,
         filter: ["!", ["has", "point_count"]],
         paint: {
           "circle-color": "#fff",
@@ -99,6 +104,21 @@ export default {
 
       self.$emit('initialized', self.map);
     });
+  },
+  watch: {
+    features: function () {
+      let self = this;
+      let source = self.map.getSource(self.sourceName);
+      if (!source) {
+        /* hacky, but it gets the initial data to load if it's available before
+           map has finished initializing */
+        setTimeout(function () {
+          self.map.getSource(self.sourceName).setData(self.features);
+        });
+        return;
+      }
+      source.setData(self.features);
+    }
   }
 };
 </script>
