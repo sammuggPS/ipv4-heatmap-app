@@ -25,8 +25,8 @@ export default {
       minZoom: 5
     });
 
+    // [scm] Heatmap config is based off of example from MapBox: https://docs.mapbox.com/mapbox-gl-js/example/heatmap-layer/
     self.map.on('load', function() {
-      // self.$watch('', );
       self.map.addSource(self.sourceName, {
         type: 'geojson',
         data: self.features
@@ -80,9 +80,8 @@ export default {
         filter: ['!', ['has', 'point_count']],
         paint: {
           'circle-color': '#fff',
-          'circle-radius': 2,
-          'circle-stroke-width': 1,
-          'circle-stroke-color': '#fff'
+          'circle-radius': 3,
+          'circle-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0, 11, 1]
         }
       });
 
