@@ -26,9 +26,12 @@ export default {
     onInitialized() {
       let self = this;
       self.isInitialized = true;
-      self.$store.dispatch('FETCH_STARTING_RALEIGH_IPS').finally(function() {
-        self.isLoading = false;
-      });
+
+      // initialize location to Raleigh
+      self.$store.dispatch('FETCH_IPS_FOR_LOCATION', 'rdu')
+        .finally(function() {
+          self.isLoading = false;
+        });
     }
   },
   computed: {

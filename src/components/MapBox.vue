@@ -21,8 +21,7 @@ export default {
       container: 'mapbox',
       style: 'mapbox://styles/mapbox/dark-v9',
       center: [-78.6382, 35.7796],
-      zoom: 10,
-      minZoom: 5
+      zoom: 10
     });
 
     // [scm] Heatmap config is based off of example from MapBox: https://docs.mapbox.com/mapbox-gl-js/example/heatmap-layer/
