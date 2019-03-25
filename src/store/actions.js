@@ -1,5 +1,4 @@
 import axios from 'axios';
-import constants from '@/constants';
 
 /**
  * Actions receive the store as their first argument then other inputs.
@@ -11,8 +10,8 @@ import constants from '@/constants';
 /**
  * Payload is expected to be the string location to fetch data for
  */
-const FETCH_IPS_FOR_LOCATION = ({ commit }, payload) => {
-  let location = constants.locations[payload];
+const FETCH_IPS_FOR_LOCATION = ({ state, commit }, payload) => {
+  let location = state.locations[payload];
 
   return axios({
     method: 'get',
@@ -23,7 +22,13 @@ const FETCH_IPS_FOR_LOCATION = ({ commit }, payload) => {
       `lowerlat=${location.lowerlat}&` +
       `upperlat=${location.upperlat}`
   }).then(results => {
-    commit('RECEIVED_NEW_FEATURE_COLLECTION', results.data);
+    commit('RECEIVED_NEW_FEATURE_COLLECTION', {
+      results: results.data,
+      location: payload
+    });
+  })
+  .finally(() => {
+    commit('DECREMENT_LOADING_COUNTER');
   });
 };
 

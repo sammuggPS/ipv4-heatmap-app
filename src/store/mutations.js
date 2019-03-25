@@ -7,9 +7,25 @@
  */
 
 const RECEIVED_NEW_FEATURE_COLLECTION = (state, payload) => {
-  state.featureCollection = payload;
+  state.featureCollection = payload.results;
+  state.currentLocation = payload.location;
+};
+
+const MAP_IS_INITIALIZED = (state) => {
+  state.isInitialized = true;
+};
+
+const INCREMENT_LOADING_COUNTER = (state) => {
+  state.isLoading++;
+};
+
+const DECREMENT_LOADING_COUNTER = (state) => {
+  state.isLoading--;
 };
 
 export default {
-  RECEIVED_NEW_FEATURE_COLLECTION
+  RECEIVED_NEW_FEATURE_COLLECTION,
+  MAP_IS_INITIALIZED,
+  INCREMENT_LOADING_COUNTER,
+  DECREMENT_LOADING_COUNTER
 };

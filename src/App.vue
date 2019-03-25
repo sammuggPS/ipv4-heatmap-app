@@ -3,39 +3,42 @@
     <div id="block-overlay" v-show="!isInitialized || isLoading">
       <span>{{ overlayText }}</span>
     </div>
-    <mapbox :features="featureCollection" v-on:initialized="onInitialized"></mapbox>
+    <location-nav-drawer id="nav-drawer" :locations="locations" @navigate="navigateTo"></location-nav-drawer>
+    <mapbox :features="featureCollection" @initialized="onInitialized"></mapbox>
   </div>
 </template>
 
 <script>
 import Mapbox from '@/components/MapBox.vue';
+import LocationNavDrawer from '@/components/LocationNavDrawer.vue';
 import { mapState } from 'vuex';
 
 export default {
   name: 'app',
   components: {
-    Mapbox
+    Mapbox,
+    LocationNavDrawer
   },
   data() {
-    return {
-      isInitialized: false,
-      isLoading: true
-    };
+    return {};
   },
   methods: {
     onInitialized() {
-      let self = this;
-      self.isInitialized = true;
+      this.$store.commit('MAP_IS_INITIALIZED');
 
       // initialize location to Raleigh
-      self.$store.dispatch('FETCH_IPS_FOR_LOCATION', 'rdu')
-        .finally(function() {
-          self.isLoading = false;
-        });
+      this.$store.commit('INCREMENT_LOADING_COUNTER');
+      this.$store.dispatch('FETCH_IPS_FOR_LOCATION', 'rdu');
+    },
+    navigateTo(key) {
+      // initialize location to Raleigh
+      this.$store.commit('INCREMENT_LOADING_COUNTER');
+      this.$store.dispatch('FETCH_IPS_FOR_LOCATION', key);
     }
   },
   computed: {
-    ...mapState(['featureCollection']),
+    ...mapState(['isInitialized', 'isLoading', 'locations', 'featureCollection']),
+    //...mapGetter({ centerPoint: 'GET_CENTER_POINT' })
     overlayText() {
       return !this.isInitialized ? 'Initializing...' : 'Loading Data...';
     }
