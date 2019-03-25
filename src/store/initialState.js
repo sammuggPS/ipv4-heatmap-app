@@ -34,7 +34,7 @@ export default {
     },
     alaska: {
       displayName: 'Alaska, USA',
-      zoom: 5,
+      zoom: 4,
       lowerlong: 172.912256,
       upperlong: -130.52122,
       lowerlat: 54.346166,
