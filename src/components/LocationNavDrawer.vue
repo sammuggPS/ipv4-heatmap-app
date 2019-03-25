@@ -3,7 +3,7 @@
     <v-container>
       <v-layout justify-center>
         <v-btn dark fab fixed top left color="blue" @click.stop="drawer = true">
-          <v-icon>{{ toggleIcon }}</v-icon>
+          <v-icon>{{ toggleIcon }}</v-icon> <slot></slot>
         </v-btn>
       </v-layout>
     </v-container>
