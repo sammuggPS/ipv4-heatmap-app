@@ -4,14 +4,19 @@
       <span>{{ overlayText }}</span>
     </div>
     <location-nav-drawer id="nav-drawer" :locations="locations" @navigate="navigateTo"></location-nav-drawer>
-    <mapbox :features="featureCollection" @initialized="onInitialized"></mapbox>
+    <mapbox
+      :centerPoint="centerPoint"
+      :zoomLevel="locations[currentLocation || defaultLocation].zoom"
+      :features="featureCollection"
+      @initialized="onInitialized"
+    ></mapbox>
   </div>
 </template>
 
 <script>
 import Mapbox from '@/components/MapBox.vue';
 import LocationNavDrawer from '@/components/LocationNavDrawer.vue';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
   name: 'app',
@@ -28,7 +33,7 @@ export default {
 
       // initialize location to Raleigh
       this.$store.commit('INCREMENT_LOADING_COUNTER');
-      this.$store.dispatch('FETCH_IPS_FOR_LOCATION', 'rdu');
+      this.$store.dispatch('FETCH_IPS_FOR_LOCATION', this.defaultLocation);
     },
     navigateTo(key) {
       // initialize location to Raleigh
@@ -37,8 +42,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['isInitialized', 'isLoading', 'locations', 'featureCollection']),
-    //...mapGetter({ centerPoint: 'GET_CENTER_POINT' })
+    ...mapState(['isInitialized', 'isLoading', 'defaultLocation', 'currentLocation', 'locations', 'featureCollection']),
+    ...mapGetters({ centerPoint: 'GET_CENTER_POINT' }),
     overlayText() {
       return !this.isInitialized ? 'Initializing...' : 'Loading Data...';
     }

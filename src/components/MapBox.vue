@@ -7,7 +7,7 @@ import mapboxgl from 'mapbox-gl';
 
 export default {
   name: 'mapbox',
-  props: ['features'],
+  props: ['centerPoint', 'zoomLevel', 'features'],
   data() {
     return {
       sourceName: 'ip-coordinates'
@@ -20,8 +20,8 @@ export default {
     self.map = new mapboxgl.Map({
       container: 'mapbox',
       style: 'mapbox://styles/mapbox/dark-v9',
-      center: [-78.6382, 35.7796],
-      zoom: 10
+      center: self.centerPoint,
+      zoom: self.zoomLevel || 10
     });
 
     // [scm] Heatmap config is based off of example from MapBox: https://docs.mapbox.com/mapbox-gl-js/example/heatmap-layer/
@@ -88,6 +88,14 @@ export default {
     });
   },
   watch: {
+    centerPoint: function() {
+      // set updated centerPoint
+      this.map.setCenter(this.centerPoint);
+    },
+    zoomLevel: function() {
+      // set updated zoomLevel
+      this.map.setZoom(this.zoomLevel);
+    },
     features: function() {
       let self = this;
       let source = self.map.getSource(self.sourceName);
