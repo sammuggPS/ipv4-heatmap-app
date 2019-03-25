@@ -13,9 +13,19 @@ const GET_CENTER_POINT = state => {
   let currentLocation = state.currentLocation || state.defaultLocation;
   let locationInfo = state.locations[currentLocation];
 
+  let longitude;
+  if (locationInfo.lowerlong > locationInfo.upperlong) {
+    // longitude bounds cross the 180th meridian. calculate in 360 and convert
+    longitude = locationInfo.lowerlong + (locationInfo.upperlong + 360 - locationInfo.lowerlong) / 2 - 360;
+  } else {
+    longitude = locationInfo.lowerlong + (locationInfo.upperlong - locationInfo.lowerlong) / 2;
+  }
+
+  let latitude = locationInfo.lowerlat + (locationInfo.upperlat - locationInfo.lowerlat) / 2;
+
   return [
-    locationInfo.lowerlong + (locationInfo.upperlong - locationInfo.lowerlong) / 2,
-    locationInfo.lowerlat + (locationInfo.upperlat - locationInfo.lowerlat) / 2
+    longitude === -180 ? 180 : longitude,
+    latitude
   ];
 };
 
